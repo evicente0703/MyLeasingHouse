@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyLeasing.Web.Data.Entities
 {
@@ -31,10 +32,11 @@ namespace MyLeasing.Web.Data.Entities
 
         [MaxLength(100, ErrorMessage = "The {0} field can not have more than {1} characters.")]
         public string Address { get; set; }
-
+        [Display(Name ="Lessee Name")]
         public string FullName => $"{FirstName} {LastName}";
-
+        [Display(Name = "Lessee Name")]
         public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
+        public ICollection<Contract> Contracts { get; set; }
     }
 }
 
