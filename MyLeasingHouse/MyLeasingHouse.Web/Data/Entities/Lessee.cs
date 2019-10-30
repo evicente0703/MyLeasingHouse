@@ -2,7 +2,7 @@
 
 namespace MyLeasing.Web.Data.Entities
 {
-    public class Owner
+    public class Lessee
     {
         public int Id { get; set; }
 
@@ -32,7 +32,6 @@ namespace MyLeasing.Web.Data.Entities
         [MaxLength(100, ErrorMessage = "The {0} field can not have more than {1} characters.")]
         public string Address { get; set; }
 
-        [Display(Name ="Owner Name")]
         public string FullName => $"{FirstName} {LastName}";
 
         public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
