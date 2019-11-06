@@ -37,6 +37,8 @@
                     @if (User.Identity.IsAuthenticated && User.IsInRole("Manager"))
                     {
                         <li><a asp-area="" asp-controller="Owners" asp-action="Index">Owners</a></li>
+                        <li><a asp-area="" asp-controller="PropertyType" asp-action="Index">Property Type</a></li>
+                        
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
