@@ -10,6 +10,7 @@ using MyLeasing.Web.Data;
 using MyLeasing.Web.Data.Entities;
 using MyLeasing.Web.Helpers;
 using MyLeasing.Web.Models;
+using MyLeasingHouse.Web.Helpers;
 
 namespace MyLeasingHouse.Web.Controllers
 {
@@ -18,16 +19,19 @@ namespace MyLeasingHouse.Web.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly IUserHelper _userHelper;
+        private readonly ICombosHelper _combosHelper;
 
         public OwnersController(
             DataContext dataContext,
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            ICombosHelper combosHelper)
         {
             _dataContext = dataContext;
             _userHelper = userHelper;
+            _combosHelper = combosHelper;
         }
 
-        
+
         public IActionResult Index()
         {
             return View(_dataContext.Owners
@@ -36,7 +40,7 @@ namespace MyLeasingHouse.Web.Controllers
                 .Include(o => o.Contracts));
         }
 
-        
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -72,6 +76,8 @@ namespace MyLeasingHouse.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                //aqui estamos creando al usuario
+                // luego realizamos un metodo CreateUserAsync
                 var user = await CreateUserAsync(model);
                 if (user != null)
                 {
@@ -202,5 +208,31 @@ namespace MyLeasingHouse.Web.Controllers
         {
             return _dataContext.Owners.Any(e => e.Id == id);
         }
+        //este metodo es para crear el combo box de PropertyViewModel
+        // id aqui nos puede llegar null para esto relizamos el primer if
+        public async Task<IActionResult> AddProperty(int? id)
+        {
+            // 1re si no lo manda null va para fuera 
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var owner = await _dataContext.Owners.FindAsync(id);
+            if (owner == null)
+            {
+                return NotFound();
+            }
+            var model = new PropertyViewModel
+            {
+                OwnerId = owner.Id,
+                //aqui el inyectos es quien me la instacia y el inyector es _combosHelper
+                // a esto se le llama yna inyeccion de independencia 
+                PropertyTypes = _combosHelper.GetComboPropertyTypes()
+            };
+
+            return View(model);
+        }
+
+        
     }
 }
