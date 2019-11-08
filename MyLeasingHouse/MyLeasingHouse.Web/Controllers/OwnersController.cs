@@ -251,6 +251,42 @@ namespace MyLeasingHouse.Web.Controllers
             return View(model);
         }
 
-        
+        public async Task<IActionResult> EditProperty(int? id)
+        {
+            // 1re si no lo manda null va para fuera 
+            if (id == null)
+            {
+                return NotFound();
+            }
+            //esto se cambia porque no soporta findasync
+            var property = await _dataContext.Properties
+                .Include(p => p.Owner)
+                .Include(p => p.PropertyType)
+                .FirstOrDefaultAsync(p => p.Id == id);
+                
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            var model = _converterHelper.ToPropertyViewModel(property);
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditProperty(PropertyViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var property = await _converterHelper.ToPropertyAsync(model, false);
+                _dataContext.Properties.Update(property);
+                //se va a vase de datos 
+                await _dataContext.SaveChangesAsync();
+                //aqui estamos redireccionado 
+                return RedirectToAction($"Details/{model.OwnerId}");
+            }
+            return View(model);
+        }
     }
 }
