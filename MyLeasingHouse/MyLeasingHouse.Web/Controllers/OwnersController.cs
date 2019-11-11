@@ -181,7 +181,6 @@ namespace MyLeasingHouse.Web.Controllers
             return View(owner);
         }
 
-        // GET: Owners/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -190,25 +189,29 @@ namespace MyLeasingHouse.Web.Controllers
             }
 
             var owner = await _dataContext.Owners
+                .Include(o => o.User)
+                .Include(o => o.Properties)
+                //.Include(o => o.Contracts)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (owner == null)
             {
                 return NotFound();
             }
+            //si las propiedades son diferentes a cero !=
+            if (owner.Properties.Count != 0)
+            {
+                ModelState.AddModelError(string.Empty, "Owner cant delete because it has propiertes.");
+                return RedirectToAction(nameof(Index));
+            }
 
-            return View(owner);
-        }
 
-        // POST: Owners/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var owner = await _dataContext.Owners.FindAsync(id);
             _dataContext.Owners.Remove(owner);
             await _dataContext.SaveChangesAsync();
+            await _userHelper.DeleteUserAsync(owner.User.Email);
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool OwnerExists(int id)
         {
