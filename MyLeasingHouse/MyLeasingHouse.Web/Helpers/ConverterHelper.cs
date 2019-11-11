@@ -39,6 +39,28 @@ namespace MyLeasingHouse.Web.Helpers
 
         }
 
+        public ContractViewModel ToContractViewModel(Contract contract)
+        {
+            return new ContractViewModel
+            {
+                //esto se aguarda con hora de londres ToUniversalTime() hora universal
+                EndDate = contract.EndDateLocal,
+                //estamos creando un operador ternario si es nuevo se carga 0 si no es nuevo le cargas lo que trae el contracto
+                Id = contract.Id,
+                IsActive = contract.IsActive,
+                Lessee = contract.Lessee,
+                Owner = contract.Owner,
+                Price = contract.Price,
+                Property = contract.Property,
+                Remarks = contract.Remarks,
+                StartDate = contract.StartDateLocal,
+                LesseeId = contract.Lessee.Id,
+                Lessees = _combosHelper.GetComboLessees(),
+                OwnerId = contract.Owner.Id,
+                PropertyId = contract.Property.Id
+            };
+        }
+
         public async Task<Property> ToPropertyAsync(PropertyViewModel model, bool isNew)
         {
             return new Property
