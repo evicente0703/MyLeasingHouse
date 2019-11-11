@@ -256,6 +256,8 @@ namespace MyLeasingHouse.Web.Controllers
                 //aqui estamos redireccionado 
                 return RedirectToAction($"Details/{model.OwnerId}");
             }
+            //esto es por si el combo box se marca luego no sale el dato
+            model.PropertyTypes = _combosHelper.GetComboLessees();
             return View(model);
         }
 
@@ -406,7 +408,9 @@ namespace MyLeasingHouse.Web.Controllers
                 await _dataContext.SaveChangesAsync();
                 return RedirectToAction($"{nameof(DetailsProperty)}/{model.PropertyId}");
             }
+            //esto es para que no llege null los datos 
 
+            model.Lessees = _combosHelper.GetComboLessees();
             return View(model);
         }
 
