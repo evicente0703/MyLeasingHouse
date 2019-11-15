@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace MyLeasing.Common.Models
 {
@@ -29,5 +30,9 @@ namespace MyLeasing.Common.Models
         public ICollection<PropertyImageResponse> PropertyImages { get; set; }
 
         public ICollection<ContractResponse> Contracts { get; set; }
+        //esto se puede realizar con un get y if pero esto es la nueva forma de hacer las cosas 
+        public string FirstImage => PropertyImages == null || PropertyImages.Count == 0
+                ? "https://myleasinghouseweb.azurewebsites.net/images/Properties/NoImage.png" 
+                : PropertyImages.FirstOrDefault().ImageUrl;     
     }
 }
