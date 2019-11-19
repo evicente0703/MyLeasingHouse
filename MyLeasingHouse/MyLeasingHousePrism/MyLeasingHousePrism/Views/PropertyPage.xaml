@@ -11,15 +11,16 @@
         <StackLayout
         Padding="10">
             <ffimageloading:CachedImage
-            Grid.Column="0"
-            Source="{Binding Property.FirstImage}"
-            LoadingPlaceholder= "LoaderImage"
-            ErrorPlaceholder= "ErrorImage"
+            Aspect="AspectFit"    
             CacheDuration= "50"
+            ErrorPlaceholder= "ErrorImage"
+            HeightRequest="300"
+            LoadingPlaceholder= "LoaderImage"
             RetryCount= "3"
             RetryDelay= "600"
-            DownsampleToViewSize = "true"
-            WidthRequest="200"/>
+            Source="{Binding Property.FirstImage}"/>
+            
+            
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
